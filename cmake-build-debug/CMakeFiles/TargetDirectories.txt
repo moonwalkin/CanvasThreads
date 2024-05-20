@@ -1,0 +1,5 @@
+C:/Users/party/CLionProjects/Canvas&Threads/cmake-build-debug/CMakeFiles/Canvas_Threads.dir
+C:/Users/party/CLionProjects/Canvas&Threads/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/party/CLionProjects/Canvas&Threads/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/party/CLionProjects/Canvas&Threads/cmake-build-debug/CMakeFiles/Canvas_Threads_autogen_timestamp_deps.dir
+C:/Users/party/CLionProjects/Canvas&Threads/cmake-build-debug/CMakeFiles/Canvas_Threads_autogen.dir
