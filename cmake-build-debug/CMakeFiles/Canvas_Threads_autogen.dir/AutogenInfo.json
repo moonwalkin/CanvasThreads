@@ -236,7 +236,21 @@
 	"CMAKE_SOURCE_DIR" : "C:/Users/party/CLionProjects/Canvas&Threads",
 	"DEP_FILE" : "C:/Users/party/CLionProjects/Canvas&Threads/cmake-build-debug/Canvas_Threads_autogen/deps",
 	"DEP_FILE_RULE_NAME" : "Canvas_Threads_autogen/timestamp",
-	"HEADERS" : [],
+	"HEADERS" : 
+	[
+		[
+			"C:/Users/party/CLionProjects/Canvas&Threads/MainWindow.h",
+			"MU",
+			"EWIEGA46WW/moc_MainWindow.cpp",
+			null
+		],
+		[
+			"C:/Users/party/CLionProjects/Canvas&Threads/RandomCoordinates.h",
+			"MU",
+			"EWIEGA46WW/moc_RandomCoordinates.cpp",
+			null
+		]
+	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
 	"INCLUDE_DIR" : "C:/Users/party/CLionProjects/Canvas&Threads/cmake-build-debug/Canvas_Threads_autogen/include",
 	"MOC_COMPILATION_FILE" : "C:/Users/party/CLionProjects/Canvas&Threads/cmake-build-debug/Canvas_Threads_autogen/mocs_compilation.cpp",
@@ -306,6 +320,16 @@
 	"SETTINGS_FILE" : "C:/Users/party/CLionProjects/Canvas&Threads/cmake-build-debug/CMakeFiles/Canvas_Threads_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
+		[
+			"C:/Users/party/CLionProjects/Canvas&Threads/MainWindow.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/party/CLionProjects/Canvas&Threads/RandomCoordinates.cpp",
+			"MU",
+			null
+		],
 		[ "C:/Users/party/CLionProjects/Canvas&Threads/main.cpp", "MU", null ]
 	],
 	"UIC_OPTIONS" : [],

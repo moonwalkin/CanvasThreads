@@ -65,6 +65,22 @@ build CMakeFiles/Canvas_Threads.dir/main.cpp.obj: CXX_COMPILER__Canvas_Threads_u
   OBJECT_DIR = CMakeFiles\Canvas_Threads.dir
   OBJECT_FILE_DIR = CMakeFiles\Canvas_Threads.dir
 
+build CMakeFiles/Canvas_Threads.dir/MainWindow.cpp.obj: CXX_COMPILER__Canvas_Threads_unscanned_Debug C$:/Users/party/CLionProjects/Canvas&Threads/MainWindow.cpp || cmake_object_order_depends_target_Canvas_Threads
+  DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
+  DEP_FILE = CMakeFiles\Canvas_Threads.dir\MainWindow.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -isystem "C:/Users/party/CLionProjects/Canvas&Threads/cmake-build-debug/Canvas_Threads_autogen/include" -isystem E:/Qt/6.6.2/mingw_64/include/QtWidgets -isystem E:/Qt/6.6.2/mingw_64/include -isystem E:/Qt/6.6.2/mingw_64/include/QtCore -isystem E:/Qt/6.6.2/mingw_64/mkspecs/win32-g++ -isystem E:/Qt/6.6.2/mingw_64/include/QtGui
+  OBJECT_DIR = CMakeFiles\Canvas_Threads.dir
+  OBJECT_FILE_DIR = CMakeFiles\Canvas_Threads.dir
+
+build CMakeFiles/Canvas_Threads.dir/RandomCoordinates.cpp.obj: CXX_COMPILER__Canvas_Threads_unscanned_Debug C$:/Users/party/CLionProjects/Canvas&Threads/RandomCoordinates.cpp || cmake_object_order_depends_target_Canvas_Threads
+  DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
+  DEP_FILE = CMakeFiles\Canvas_Threads.dir\RandomCoordinates.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -isystem "C:/Users/party/CLionProjects/Canvas&Threads/cmake-build-debug/Canvas_Threads_autogen/include" -isystem E:/Qt/6.6.2/mingw_64/include/QtWidgets -isystem E:/Qt/6.6.2/mingw_64/include -isystem E:/Qt/6.6.2/mingw_64/include/QtCore -isystem E:/Qt/6.6.2/mingw_64/mkspecs/win32-g++ -isystem E:/Qt/6.6.2/mingw_64/include/QtGui
+  OBJECT_DIR = CMakeFiles\Canvas_Threads.dir
+  OBJECT_FILE_DIR = CMakeFiles\Canvas_Threads.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target Canvas_Threads
@@ -73,7 +89,7 @@ build CMakeFiles/Canvas_Threads.dir/main.cpp.obj: CXX_COMPILER__Canvas_Threads_u
 #############################################
 # Link the executable Canvas_Threads.exe
 
-build Canvas_Threads.exe: CXX_EXECUTABLE_LINKER__Canvas_Threads_Debug CMakeFiles/Canvas_Threads.dir/Canvas_Threads_autogen/mocs_compilation.cpp.obj CMakeFiles/Canvas_Threads.dir/main.cpp.obj | E$:/Qt/6.6.2/mingw_64/lib/libQt6Widgets.a E$:/Qt/6.6.2/mingw_64/lib/libQt6Gui.a E$:/Qt/6.6.2/mingw_64/lib/libQt6Core.a || Canvas_Threads_autogen Canvas_Threads_autogen_timestamp_deps
+build Canvas_Threads.exe: CXX_EXECUTABLE_LINKER__Canvas_Threads_Debug CMakeFiles/Canvas_Threads.dir/Canvas_Threads_autogen/mocs_compilation.cpp.obj CMakeFiles/Canvas_Threads.dir/main.cpp.obj CMakeFiles/Canvas_Threads.dir/MainWindow.cpp.obj CMakeFiles/Canvas_Threads.dir/RandomCoordinates.cpp.obj | E$:/Qt/6.6.2/mingw_64/lib/libQt6Widgets.a E$:/Qt/6.6.2/mingw_64/lib/libQt6Gui.a E$:/Qt/6.6.2/mingw_64/lib/libQt6Core.a || Canvas_Threads_autogen Canvas_Threads_autogen_timestamp_deps
   FLAGS = -g
   LINK_LIBRARIES = E:/Qt/6.6.2/mingw_64/lib/libQt6Widgets.a  E:/Qt/6.6.2/mingw_64/lib/libQt6Gui.a  E:/Qt/6.6.2/mingw_64/lib/libQt6Core.a  -lmpr  -luserenv  -ld3d11  -ldxgi  -ldxguid  -ld3d12  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\Canvas_Threads.dir
