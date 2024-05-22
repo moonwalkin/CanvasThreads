@@ -1,28 +1,22 @@
-#include <QMainWindow>
-#include <QVBoxLayout>
-#include <QTextEdit>
-#include <QLabel>
-#include <QPainter>
-#include <QGuiApplication>
-#include <random>
 #include "MainWindow.h"
 
 void MainWindow::setupUi() {
-    QPixmap *canvas = new QPixmap(1920, 880);
-    canvas->fill(Qt::white);
-    QWidget * centralWidget = new QWidget();
-    QVBoxLayout * layout = new QVBoxLayout(centralWidget);
+    QWidget *centralWidget = new QWidget();
+    CanvasWidget *canvas = new CanvasWidget(this);
+    QVBoxLayout *layout = new QVBoxLayout(centralWidget);
     QLabel *canvasLabel = new QLabel();
-    canvasLabel->setPixmap(*canvas);
-    QTextEdit * console = new QTextEdit();
-    console->setFixedHeight(200);
-    console->setFont(QFont("Arial", 12));
+    QTextEdit *console = new QTextEdit();
     QPalette palette = console->palette();
+    console->setFixedHeight(consoleHeight);
+    console->setFont(QFont("Arial", 12));
     palette.setColor(QPalette::Base, Qt::black);
     palette.setColor(QPalette::Text, Qt::white);
     console->setPalette(palette);
+    layout->addWidget(canvas);
     layout->addWidget(canvasLabel);
     layout->addWidget(console);
+    canvas->setFixedHeight(canvasHeight);
+    canvas->setStyleSheet("border: 1px solid purple;");
     setCentralWidget(centralWidget);
 }
 
