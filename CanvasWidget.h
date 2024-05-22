@@ -2,6 +2,7 @@
 #define CANVAS_THREADS_CANVASWIDGET_H
 
 #include <QWidget>
+#include <mutex>
 #include "CoordinatesWithColor.h"
 
 const unsigned short pointWidth = 15;
@@ -11,7 +12,11 @@ class CanvasWidget : public QWidget {
 public:
     CanvasWidget(QWidget *parent = nullptr) : QWidget(parent) {}
 
+private:
+    std::mutex mutex;
     std::vector<CoordinatesWithColor> coordinates = std::vector<CoordinatesWithColor>();
+
+    void changeColorIfCoordinatesExists(CoordinatesWithColor &coordinatesWithColor);
 
 public slots:
 

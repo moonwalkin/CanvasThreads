@@ -12,3 +12,11 @@ QColor CoordinatesWithColor::getColor() {
 Coordinates CoordinatesWithColor::getCoordinates() {
     return coordinates;
 }
+
+bool CoordinatesWithColor::operator==(const Coordinates &other) const {
+    return coordinates == other;
+}
+
+bool CoordinatesWithColor::operator!=(const CoordinatesWithColor &other) const {
+    return !(*this == other.coordinates);
+}

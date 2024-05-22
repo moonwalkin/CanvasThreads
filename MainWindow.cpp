@@ -31,7 +31,7 @@ void MainWindow::setupConnections() {
     createPixelTreads(canvasSize);
 }
 
-void MainWindow::threadPaint(CoordinatesWithColor coordinatesWithColor) {
+void MainWindow::paint(CoordinatesWithColor coordinatesWithColor) {
     canvas->paintPixel(coordinatesWithColor);
 }
 
@@ -45,14 +45,36 @@ void MainWindow::createPixelTreads(CanvasSize canvasSize) {
 //    threads.push_back(bluePixel);
 //    threads.push_back(bluePixel);
 
-    connect(&greenPixel, &PixelPainter::pixelPainted, this, &MainWindow::threadPaint);
-    connect(&bluePixel, &PixelPainter::pixelPainted, this, &MainWindow::threadPaint);
-    connect(&redPixel, &PixelPainter::pixelPainted, this, &MainWindow::threadPaint);
+    connect(&greenPixel, &PixelPainter::pixelPainted, this, &MainWindow::paint);
+    connect(&bluePixel, &PixelPainter::pixelPainted, this, &MainWindow::paint);
+    connect(&redPixel, &PixelPainter::pixelPainted, this, &MainWindow::paint);
 
-    greenPixel.start();
-    bluePixel.start();
-    redPixel.start();
-    greenPixel.wait();
-    bluePixel.wait();
-    redPixel.wait();
+    QThread *thread = QThread::create([this] {
+        while (1) {
+            canvas->paintPixel(CoordinatesWithColor(Coordinates::generate(1920, 800), Qt::blue));
+            QThread::msleep(200);
+        }
+    });
+    QThread *thread2 = QThread::create([this] {
+        while (1) {
+            canvas->paintPixel(CoordinatesWithColor(Coordinates::generate(1920, 800), Qt::red));
+            QThread::msleep(200);
+        }
+    });
+    QThread *thread3 = QThread::create([this] {
+        while (1) {
+            canvas->paintPixel(CoordinatesWithColor(Coordinates::generate(1920, 800), Qt::green));
+            QThread::msleep(200);
+        }
+    });
+    thread->start();
+    thread2->start();
+    thread3->start();
+//    greenPixel.start();
+//    bluePixel.start();
+//    redPixel.start();
+//    greenPixel.quit();
+//    greenPixel.wait();
+//    bluePixel.wait();
+//    redPixel.wait();
 }

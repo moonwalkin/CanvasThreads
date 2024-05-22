@@ -3,13 +3,11 @@
 
 #include <chrono>
 #include "Coordinates.h"
-
 enum Color {
     Green,
     Blue,
     Red
 };
-
 class Message {
 public:
     std::string threadName;

@@ -11,14 +11,16 @@
 class PixelPainter : public QThread {
 Q_OBJECT
 
-
 public:
     void run() override;
 
-    void startPainting();
-
     PixelPainter(QString threadName, CanvasSize canvasSize);
+
     PixelPainter();
+
+private slots:
+
+    void painting();
 
 private:
     QString threadName;

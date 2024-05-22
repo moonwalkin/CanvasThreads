@@ -14,6 +14,8 @@ public:
     CoordinatesWithColor(Coordinates coordinates, QColor color);
     QColor getColor();
     Coordinates getCoordinates();
+    bool operator==(const Coordinates& other) const;
+    bool operator!=(const CoordinatesWithColor& other) const;
 };
 
 

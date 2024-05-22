@@ -28,7 +28,7 @@ private:
     void createPixelTreads(CanvasSize canvasSize);
 
 private slots:
-    void threadPaint(CoordinatesWithColor coordinatesWithColor);
+    void paint(CoordinatesWithColor coordinatesWithColor);
 };
 
 #endif //CANVAS_THREADS_MAINWINDOW_H
