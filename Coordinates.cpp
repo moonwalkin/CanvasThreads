@@ -13,3 +13,11 @@ Coordinates Coordinates::generate(unsigned short canvasWidth, unsigned short can
     std::uniform_int_distribution<std::mt19937::result_type> y(margin, canvasHeight - margin);
     return Coordinates(x(rng), y(rng));
 }
+
+unsigned short Coordinates::getX() {
+    return x;
+}
+
+unsigned short Coordinates::getY() {
+    return y;
+}

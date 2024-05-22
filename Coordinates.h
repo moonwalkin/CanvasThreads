@@ -6,13 +6,14 @@
 const unsigned short margin = 25;
 
 class Coordinates {
-
-public:
+private:
     unsigned short x;
     unsigned short y;
     Coordinates(unsigned short x, unsigned short y);
+public:
     Coordinates();
-
+    unsigned short getX();
+    unsigned short getY();
     static Coordinates generate(unsigned short canvasWidth, unsigned short canvasHeight);
 };
 
