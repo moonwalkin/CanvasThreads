@@ -1,5 +1,6 @@
 #include <QPainter>
 #include "CanvasWidget.h"
+#include "algorithm"
 
 void CanvasWidget::paintEvent(QPaintEvent *event) {
     if (coordinates.empty()) return;
@@ -13,6 +14,20 @@ void CanvasWidget::paintEvent(QPaintEvent *event) {
 }
 
 void CanvasWidget::paintPixel(CoordinatesWithColor coordinatesWithColor) {
-    this->coordinates.push_back(coordinatesWithColor);
+    mutex.lock();
+    changeColorIfCoordinatesExists(coordinatesWithColor);
+    mutex.unlock();
     update();
+}
+
+void CanvasWidget::changeColorIfCoordinatesExists(CoordinatesWithColor &coordinatesWithColor) {
+    auto it = std::find(coordinates.begin(), coordinates.end(), coordinatesWithColor.getCoordinates());
+    if (it == coordinates.end()) {
+        coordinates.push_back(coordinatesWithColor);
+    } else {
+        //        std::vector<QColor> colors = std::vector<QColor>();
+//        colors.push_back(coordinatesWithColor.getColor());
+//        colors.push_back(it.base()->getColor());
+        coordinates.push_back(CoordinatesWithColor(coordinatesWithColor.getCoordinates(), Qt::yellow));
+    }
 }
