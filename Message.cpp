@@ -14,7 +14,7 @@ QString Message::toString() const {
     else if (pixelColor == Qt::green) color = "Green";
 
     return QString::fromStdString(
-            "Thread name: " + this->threadName + "\nColor: " + color +
+            "Thread name: " + threadName + "\nColor: " + color +
             "\nCoordinates: x = " + std::to_string(this->coordinates.getX()) + ", y = " +
             std::to_string(this->coordinates.getY()) + "\nTime: " + mapTimeToString()
     );
