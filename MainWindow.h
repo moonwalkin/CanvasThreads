@@ -7,14 +7,18 @@
 #include <QLabel>
 #include <QPainter>
 #include <QPushButton>
-#include "PixelPainter.h"
 #include <queue>
 #include "Message.h"
 #include "CanvasWidget.h"
 #include "QReadWriteLock"
+#include "CanvasSize.h"
+#include "QTimer"
+#include <QThread>
 
 const unsigned short canvasHeight = 820;
 const unsigned short consoleHeight = 200;
+const unsigned short clearConsoleDelay = 30000;
+const unsigned short showMsgsDelay = 100;
 
 class MainWindow : public QMainWindow {
 Q_OBJECT
@@ -33,7 +37,6 @@ private:
     void writeToQueue(Message &message);
     void createTimer(const char* slot, int delay);
 private slots:
-    void paint(CoordinatesWithColor coordinatesWithColor, Action action);
     void clearConsole();
     void showMessages();
 };
