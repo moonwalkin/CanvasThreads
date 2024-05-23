@@ -12,7 +12,37 @@ enum Action {
 
 
 const unsigned short pointWidth = 15;
+class MyPoint : public QPoint {
+public:
+    MyPoint(int x = 0, int y = 0) : QPoint(x, y) {}
+    MyPoint(const QPoint &point) : QPoint(point) {}
 
+    bool operator==(const MyPoint &other) const {
+        return isCloseEnough(x(), other.x()) && isCloseEnough(y(), other.y());
+    }
+
+    bool operator!=(const MyPoint &other) const {
+        return !(*this == other);
+    }
+
+    bool operator<(const MyPoint &other) const {
+        if (y() == other.y()) {
+            return x() < other.x();
+        }
+        return y() < other.y();
+    }
+
+    bool operator>(const MyPoint &other) const {
+        if (y() == other.y()) {
+            return x() > other.x();
+        }
+        return y() > other.y();
+    }
+
+    bool isCloseEnough(int a, int b) const {
+        return abs(a - b) <= possibleDifference;
+    }
+};
 class CanvasWidget : public QWidget {
 
 public:
@@ -20,7 +50,7 @@ public:
 
 private:
     std::mutex mutex;
-    std::vector<CoordinatesWithColor> coordinates = std::vector<CoordinatesWithColor>();
+    QMap<MyPoint, QColor> coordinates = QMap<MyPoint, QColor>();
 
     void changeColorIfCoordinatesExists(CoordinatesWithColor &coordinatesWithColor);
     QColor blendColors(QColor oldColor, QColor currentColor);

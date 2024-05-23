@@ -14,8 +14,8 @@ private:
 public:
     Coordinates();
     Coordinates(const Coordinates& other);
-    unsigned short getX();
-    unsigned short getY();
+    unsigned short getX() const;
+    unsigned short getY() const;
     static Coordinates generate(unsigned short canvasWidth, unsigned short canvasHeight);
     bool operator==(const Coordinates& other) const;
     bool operator!=(const Coordinates& other) const;

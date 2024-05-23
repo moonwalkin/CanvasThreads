@@ -1,15 +1,19 @@
 #include <QPainter>
 #include "CanvasWidget.h"
-#include "algorithm"
 
 void CanvasWidget::paintEvent(QPaintEvent *event) {
     if (coordinates.empty()) return;
 
     QPainter painter(this);
 
-    for (CoordinatesWithColor coordinatesWithColor: coordinates) {
-        painter.setPen(QPen(coordinatesWithColor.getColor(), pointWidth, Qt::SolidLine, Qt::RoundCap));
-        painter.drawPoint(coordinatesWithColor.getCoordinates().getX(), coordinatesWithColor.getCoordinates().getY());
+    QMapIterator<MyPoint, QColor> iterator(coordinates);
+    while (iterator.hasNext()) {
+        iterator.next();
+        const QPoint &coords = iterator.key();
+        const QColor &color = iterator.value();
+
+        painter.setPen(QPen(color, pointWidth, Qt::SolidLine, Qt::RoundCap));
+        painter.drawPoint(coords);
     }
 }
 
@@ -21,20 +25,21 @@ void CanvasWidget::paintPixel(CoordinatesWithColor coordinatesWithColor, Action 
     else
         changeBrightness();
 
-    mutex.unlock();
     update();
+    mutex.unlock();
 }
 
 void CanvasWidget::changeColorIfCoordinatesExists(CoordinatesWithColor &coordinatesWithColor) {
-    Coordinates currentCoordinates = coordinatesWithColor.getCoordinates();
-    QColor currentColor = coordinatesWithColor.getColor();
-    auto iterator = std::find(coordinates.begin(), coordinates.end(), currentCoordinates);
-    if (iterator == coordinates.end()) {
-        coordinates.push_back(CoordinatesWithColor(currentCoordinates, currentColor));
-    } else {
-        QColor oldColor = iterator.base()->getColor();
+    int x = coordinatesWithColor.getCoordinates().getX();
+    int y = coordinatesWithColor.getCoordinates().getY();
+    const QColor &currentColor = coordinatesWithColor.getColor();
+    const MyPoint currentCoordinates = MyPoint(x, y);
+    if (coordinates.contains(currentCoordinates)) {
+        QColor oldColor = coordinates.value(currentCoordinates);
         QColor newColor = blendColors(oldColor, currentColor);
-        coordinates.push_back(CoordinatesWithColor(coordinatesWithColor.getCoordinates(), newColor));
+        coordinates.insert(currentCoordinates, newColor);
+    } else {
+        coordinates.insert(currentCoordinates, currentColor);
     }
 }
 
@@ -50,10 +55,15 @@ QColor CanvasWidget::blendColors(QColor oldColor, QColor currentColor) {
 }
 
 void CanvasWidget::changeBrightness() {
-    for (auto &item: coordinates) {
-        int r = item.getColor().red();
-        int g = item.getColor().green();
-        int b = item.getColor().blue();
+    QMapIterator<MyPoint, QColor> iterator(coordinates);
+    while (iterator.hasNext()) {
+        iterator.next();
+        QPoint point = iterator.key();
+        QColor &color = coordinates[point];
+
+        int r = color.red();
+        int g = color.green();
+        int b = color.blue();
 
         double brightnessDelta = 255.0 * 5 / 100.0;
 
@@ -61,6 +71,6 @@ void CanvasWidget::changeBrightness() {
         g = qBound(0, static_cast<int>(g + brightnessDelta), 255);
         b = qBound(0, static_cast<int>(b + brightnessDelta), 255);
 
-        item.setColor(QColor(r, g, b));
+        color = QColor(r, g, b);
     }
 }
