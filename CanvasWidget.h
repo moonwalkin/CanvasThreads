@@ -17,7 +17,7 @@ private:
     std::vector<CoordinatesWithColor> coordinates = std::vector<CoordinatesWithColor>();
 
     void changeColorIfCoordinatesExists(CoordinatesWithColor &coordinatesWithColor);
-
+    QColor blendColors(QColor oldColor, QColor currentColor);
 public slots:
 
     void paintPixel(CoordinatesWithColor coordinatesWithColor);

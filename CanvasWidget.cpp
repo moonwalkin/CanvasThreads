@@ -25,9 +25,21 @@ void CanvasWidget::changeColorIfCoordinatesExists(CoordinatesWithColor &coordina
     if (it == coordinates.end()) {
         coordinates.push_back(coordinatesWithColor);
     } else {
-        //        std::vector<QColor> colors = std::vector<QColor>();
-//        colors.push_back(coordinatesWithColor.getColor());
-//        colors.push_back(it.base()->getColor());
-        coordinates.push_back(CoordinatesWithColor(coordinatesWithColor.getCoordinates(), Qt::yellow));
+        QColor currentColor = coordinatesWithColor.getColor();
+        QColor oldColor = it.base()->getColor();
+        QColor newColor = blendColors(oldColor, currentColor);
+        coordinates.push_back(CoordinatesWithColor(coordinatesWithColor.getCoordinates(), newColor));
+//        coordinates.push_back(CoordinatesWithColor(coordinatesWithColor.getCoordinates(), Qt::yellow));
     }
+}
+
+QColor CanvasWidget::blendColors(QColor oldColor, QColor currentColor) {
+    if (oldColor == Qt::red && currentColor == Qt::green || oldColor == Qt::green && currentColor == Qt::red) {
+        return QColor(Qt::yellow);
+    } else if (oldColor == Qt::red && currentColor == Qt::blue || oldColor == Qt::blue && currentColor == Qt::red) {
+        return QColor(Qt::magenta);
+    } else if (oldColor == Qt::green && currentColor == Qt::blue || oldColor == Qt::blue && currentColor == Qt::green) {
+        return QColor(Qt::cyan);
+    }
+    return Qt::gray;
 }
