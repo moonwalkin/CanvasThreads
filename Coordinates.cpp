@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QRandomGenerator>
 #include "Coordinates.h"
 
 Coordinates::Coordinates(unsigned short x, unsigned short y) {
@@ -14,12 +15,11 @@ Coordinates::Coordinates(const Coordinates &other) {
 }
 
 Coordinates Coordinates::generate(unsigned short canvasWidth, unsigned short canvasHeight) {
-    std::random_device dev;
-    std::mt19937 rng(dev());
-    std::uniform_int_distribution<std::mt19937::result_type> x(margin, canvasWidth - margin);
-    std::uniform_int_distribution<std::mt19937::result_type> y(margin, canvasHeight - margin);
-    qDebug() << "X:" << x(rng) << " Y: " << y(rng);
-    return Coordinates(x(rng), y(rng));
+    QRandomGenerator *random = QRandomGenerator::global();
+    unsigned short randomX = random->bounded(margin, canvasWidth - margin);
+    unsigned short randomY = random->bounded(margin, canvasHeight - margin);
+    qDebug() << "X:" << randomX << " Y: " << randomY;
+    return Coordinates(randomX, randomY);
 }
 
 unsigned short Coordinates::getX() const {

@@ -1,4 +1,5 @@
 #include <QPainter>
+#include <QRandomGenerator>
 #include "CanvasWidget.h"
 
 void CanvasWidget::paintEvent(QPaintEvent *event) {
@@ -51,26 +52,39 @@ QColor CanvasWidget::blendColors(QColor oldColor, QColor currentColor) {
     } else if (oldColor == Qt::green && currentColor == Qt::blue || oldColor == Qt::blue && currentColor == Qt::green) {
         return Qt::cyan;
     }
-    return Qt::gray;
+    return createRandomColor(oldColor, currentColor);
 }
 
 void CanvasWidget::changeBrightness() {
-    QMapIterator<MyPoint, QColor> iterator(coordinates);
-    while (iterator.hasNext()) {
-        iterator.next();
-        QPoint point = iterator.key();
-        QColor &color = coordinates[point];
+    QMap<MyPoint, QColor>::iterator iterator = coordinates.begin();
+    while (iterator != coordinates.end()) {
+        QColor &color = iterator.value();
 
         int r = color.red();
         int g = color.green();
         int b = color.blue();
 
-        double brightnessDelta = 255.0 * 5 / 100.0;
+        double brightnessDelta = 255.0 * percent / 100.0;
 
         r = qBound(0, static_cast<int>(r + brightnessDelta), 255);
         g = qBound(0, static_cast<int>(g + brightnessDelta), 255);
         b = qBound(0, static_cast<int>(b + brightnessDelta), 255);
 
         color = QColor(r, g, b);
+        ++iterator;
     }
+}
+
+QColor CanvasWidget::createRandomColor(QColor oldColor, QColor currentColor) {
+    QRandomGenerator *random = QRandomGenerator::global();
+
+    int randomRed = random->bounded(256);
+    int randomGreen = random->bounded(256);
+    int randomBlue = random->bounded(256);
+
+    int newRed = (oldColor.red() + currentColor.red() + randomRed) % 256;
+    int newGreen = (oldColor.green() + currentColor.green() + randomGreen) % 256;
+    int newBlue = (oldColor.blue() + currentColor.blue() + randomBlue) % 256;
+
+    return QColor::fromRgb(newRed, newGreen, newBlue);
 }
