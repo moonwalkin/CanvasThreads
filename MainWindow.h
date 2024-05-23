@@ -8,8 +8,10 @@
 #include <QPainter>
 #include <QPushButton>
 #include "PixelPainter.h"
+#include <queue>
 #include "Message.h"
 #include "CanvasWidget.h"
+#include "QReadWriteLock"
 
 const unsigned short canvasHeight = 820;
 const unsigned short consoleHeight = 200;
@@ -26,7 +28,9 @@ private:
     void setupConnections();
     void setupUi();
     void createPixelTreads(CanvasSize canvasSize);
-
+    std::queue<Message> messageQueue;
+    QReadWriteLock rwLock;
+    void writeToQueue(Message &message);
 private slots:
     void paint(CoordinatesWithColor coordinatesWithColor, Action action);
 };

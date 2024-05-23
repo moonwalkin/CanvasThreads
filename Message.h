@@ -3,20 +3,25 @@
 
 #include <chrono>
 #include "Coordinates.h"
-enum Color {
-    Green,
-    Blue,
-    Red
-};
+#include <qstring.h>
+#include <QColor>
+#include <ctime>
+#include <iomanip>
+#include <qdatetime.h>
+
 class Message {
 public:
     std::string threadName;
     Coordinates coordinates;
-    Color pixelColor;
-    std::chrono::time_point<std::chrono::steady_clock> timestamp;
+    QColor pixelColor;
+    QDateTime time;
 
-    Message(std::string threadName, Coordinates coordinates, Color pixelColor,
-            std::chrono::time_point<std::chrono::steady_clock> timestamp);
+    Message(std::string threadName, Coordinates &coordinates, QColor pixelColor,
+            QDateTime &time);
+
+    QString toString() const;
+private:
+    std::string mapTimeToString() const;
 };
 
 

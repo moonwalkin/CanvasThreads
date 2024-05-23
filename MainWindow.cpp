@@ -1,3 +1,4 @@
+#include <iomanip>
 #include "MainWindow.h"
 
 void MainWindow::setupUi() {
@@ -35,23 +36,41 @@ void MainWindow::paint(CoordinatesWithColor coordinatesWithColor, Action action)
 //    canvas->paintPixel(coordinatesWithColor, action);
 }
 
+void MainWindow::writeToQueue(Message &message) {
+    rwLock.lockForWrite();
+    messageQueue.push(message);
+    rwLock.unlock();
+}
+
 void MainWindow::createPixelTreads(CanvasSize canvasSize) {
     QThread *thread = QThread::create([this] {
         while (1) {
-            canvas->paintPixel(CoordinatesWithColor(Coordinates::generate(1920, 800), Qt::blue), AddNewColor);
-            QThread::usleep(1000);
+            Coordinates coordinates = Coordinates::generate(1920, 800);
+            canvas->paintPixel(CoordinatesWithColor(coordinates, Qt::blue), AddNewColor);
+            QDateTime currentTime = QDateTime::currentDateTime();
+            Message message = Message("blueThread", coordinates, Qt::blue, currentTime);
+            writeToQueue(message);
+            QThread::msleep(10000);
         }
     });
     QThread *thread2 = QThread::create([this] {
         while (1) {
-            canvas->paintPixel(CoordinatesWithColor(Coordinates::generate(1920, 800), Qt::red), AddNewColor);
+            Coordinates coordinates = Coordinates::generate(1920, 800);
+            canvas->paintPixel(CoordinatesWithColor(coordinates, Qt::red), AddNewColor);
+            QDateTime currentTime = QDateTime::currentDateTime();
+            Message message = Message("redThread", coordinates, Qt::red, currentTime);
+            writeToQueue(message);
             QThread::usleep(1000);
         }
     });
     QThread *thread3 = QThread::create([this] {
         while (1) {
-            canvas->paintPixel(CoordinatesWithColor(Coordinates::generate(1920, 800), Qt::green), AddNewColor);
-            QThread::usleep(1000);
+            Coordinates coordinates = Coordinates::generate(1920, 800);
+            canvas->paintPixel(CoordinatesWithColor(coordinates, Qt::green), AddNewColor);
+            QDateTime currentTime = QDateTime::currentDateTime();
+            Message message = Message("greenThread", coordinates, Qt::green, currentTime);
+            writeToQueue(message);
+            QThread::msleep(1000);
         }
     });
     QThread *thread4 = QThread::create([this] {
@@ -61,8 +80,20 @@ void MainWindow::createPixelTreads(CanvasSize canvasSize) {
             QThread::msleep(1000);
         }
     });
+
+    QThread *thread5 = QThread::create([this] {
+        while (1) {
+            while (!messageQueue.empty()) {
+                Message message = messageQueue.front();
+
+                console->append(message.toString());
+                messageQueue.pop();
+            }
+        }
+    });
     thread->start();
-    thread2->start();
-    thread3->start();
-    thread4->start();
+//    thread2->start();
+//    thread3->start();
+//    thread4->start();
+    thread5->start();
 }
