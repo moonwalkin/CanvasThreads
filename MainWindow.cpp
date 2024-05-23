@@ -43,6 +43,9 @@ void MainWindow::writeToQueue(Message &message) {
 }
 
 void MainWindow::createPixelTreads(CanvasSize canvasSize) {
+    createTimer(SLOT(clearConsole()), 30000);
+    createTimer(SLOT(showMessages()), 100);
+
     QThread *thread = QThread::create([this] {
         while (1) {
             Coordinates coordinates = Coordinates::generate(1920, 800);
@@ -50,7 +53,7 @@ void MainWindow::createPixelTreads(CanvasSize canvasSize) {
             QDateTime currentTime = QDateTime::currentDateTime();
             Message message = Message("blueThread", coordinates, Qt::blue, currentTime);
             writeToQueue(message);
-            QThread::msleep(10000);
+            QThread::msleep(1000);
         }
     });
     QThread *thread2 = QThread::create([this] {
@@ -81,19 +84,34 @@ void MainWindow::createPixelTreads(CanvasSize canvasSize) {
         }
     });
 
-    QThread *thread5 = QThread::create([this] {
-        while (1) {
-            while (!messageQueue.empty()) {
-                Message message = messageQueue.front();
-
-                console->append(message.toString());
-                messageQueue.pop();
-            }
-        }
-    });
+//    QThread *thread5 = QThread::create([this] {
+//        while (1) {
+//
+//        }
+//    });
     thread->start();
 //    thread2->start();
 //    thread3->start();
 //    thread4->start();
-    thread5->start();
+//    thread5->start();
+}
+
+void MainWindow::showMessages() {
+    while (!messageQueue.empty()) {
+        Message message = messageQueue.front();
+        qDebug() << "showed";
+        console->append(message.toString());
+        messageQueue.pop();
+    }
+}
+
+void MainWindow::clearConsole() {
+    qDebug() << "called";
+    console->clear();
+}
+
+void MainWindow::createTimer(const char* slot, int delay) {
+    QTimer *timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, slot);
+    timer->start(delay);
 }

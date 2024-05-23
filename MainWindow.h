@@ -31,8 +31,11 @@ private:
     std::queue<Message> messageQueue;
     QReadWriteLock rwLock;
     void writeToQueue(Message &message);
+    void createTimer(const char* slot, int delay);
 private slots:
     void paint(CoordinatesWithColor coordinatesWithColor, Action action);
+    void clearConsole();
+    void showMessages();
 };
 
 #endif //CANVAS_THREADS_MAINWINDOW_H
