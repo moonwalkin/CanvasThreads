@@ -7,6 +7,7 @@
 #include "PixelPainter.moc"
 #include "QTimer"
 #include "CanvasSize.h"
+#include "CanvasWidget.h"
 
 class PixelPainter : public QThread {
 Q_OBJECT
@@ -27,7 +28,7 @@ private:
     CanvasSize canvasSize;
 signals:
 
-    void pixelPainted(CoordinatesWithColor coordinatesWithColor);
+    void pixelPainted(CoordinatesWithColor coordinatesWithColor, Action action);
 };
 
 #endif //CANVAS_THREADS_PIXELPAINTER_H

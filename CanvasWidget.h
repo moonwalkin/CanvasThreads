@@ -5,6 +5,12 @@
 #include <mutex>
 #include "CoordinatesWithColor.h"
 
+enum Action {
+    AddNewColor,
+    ChangeColorsBrightness
+};
+
+
 const unsigned short pointWidth = 15;
 
 class CanvasWidget : public QWidget {
@@ -18,9 +24,10 @@ private:
 
     void changeColorIfCoordinatesExists(CoordinatesWithColor &coordinatesWithColor);
     QColor blendColors(QColor oldColor, QColor currentColor);
+    void changeBrightness();
 public slots:
 
-    void paintPixel(CoordinatesWithColor coordinatesWithColor);
+    void paintPixel(CoordinatesWithColor coordinatesWithColor, Action action);
 
 protected:
     void paintEvent(QPaintEvent *event) override;

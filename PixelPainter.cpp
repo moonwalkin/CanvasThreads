@@ -11,7 +11,7 @@ void PixelPainter::painting() {
         pixelColor = Qt::red;
     Coordinates coordinates = Coordinates::generate(canvasSize.getWidth(), canvasSize.getHeight());
 
-    emit pixelPainted(CoordinatesWithColor(coordinates, pixelColor));
+//    emit pixelPainted(CoordinatesWithColor(coordinates, pixelColor));
 }
 
 void PixelPainter::run() {

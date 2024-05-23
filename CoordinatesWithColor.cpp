@@ -20,3 +20,7 @@ bool CoordinatesWithColor::operator==(const Coordinates &other) const {
 bool CoordinatesWithColor::operator!=(const CoordinatesWithColor &other) const {
     return !(*this == other.coordinates);
 }
+
+void CoordinatesWithColor::setColor(QColor newColor) {
+    color = newColor;
+}
