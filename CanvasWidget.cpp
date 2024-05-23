@@ -21,15 +21,14 @@ void CanvasWidget::paintPixel(CoordinatesWithColor coordinatesWithColor) {
 }
 
 void CanvasWidget::changeColorIfCoordinatesExists(CoordinatesWithColor &coordinatesWithColor) {
-    auto it = std::find(coordinates.begin(), coordinates.end(), coordinatesWithColor.getCoordinates());
-    if (it == coordinates.end()) {
+    auto iterator = std::find(coordinates.begin(), coordinates.end(), coordinatesWithColor.getCoordinates());
+    if (iterator == coordinates.end()) {
         coordinates.push_back(coordinatesWithColor);
     } else {
         QColor currentColor = coordinatesWithColor.getColor();
-        QColor oldColor = it.base()->getColor();
+        QColor oldColor = iterator.base()->getColor();
         QColor newColor = blendColors(oldColor, currentColor);
         coordinates.push_back(CoordinatesWithColor(coordinatesWithColor.getCoordinates(), newColor));
-//        coordinates.push_back(CoordinatesWithColor(coordinatesWithColor.getCoordinates(), Qt::yellow));
     }
 }
 
