@@ -24,11 +24,12 @@ void CanvasWidget::doWork(QColor color, QThread &thread, std::function<void(Mess
         QDateTime currentTime = QDateTime::currentDateTime();
         Message message = Message(thread.objectName().toStdString(), coord, color, currentTime);
         body(message);
-        QThread::msleep(1000);
+        QThread::msleep(delay);
     }
 }
 
-void CanvasWidget::createThreads(std::function<void(Message &message)> body) {
+void CanvasWidget::createThreads(std::function<void(Message &message)> body, int delay) {
+    this->delay = delay;
     if (isThreadsRunning) return;
 
     blueThread = QThread::create([this, body] {
@@ -51,7 +52,7 @@ void CanvasWidget::createThreads(std::function<void(Message &message)> body) {
         while (true) {
             if (brightnessThread->isInterruptionRequested()) return;
             paintPixel(nullptr);
-            QThread::msleep(1000);
+            QThread::msleep(this->delay * 10);
         }
     });
 
@@ -158,4 +159,8 @@ void CanvasWidget::setThreadsName() {
     greenThread->setObjectName(QString("Green Thread"));
     redThread->setObjectName(QString("Red Thread"));
     brightnessThread->setObjectName(QString("Brightness Thread"));
+}
+
+void CanvasWidget::changeDelay(int newDelay) {
+    delay = newDelay;
 }

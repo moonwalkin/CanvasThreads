@@ -1,3 +1,4 @@
+#include <QPushButton>
 #include "../headers/MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -35,16 +36,24 @@ void MainWindow::showContextMenu(const QPoint &pos) {
     menu.exec(mapToGlobal(pos));
 }
 
+void MainWindow::changeDelay() {
+    canvas->changeDelay(lineEdit->text().toInt());
+    dialog->close();
+}
+
 void MainWindow::setupActions(QMenu &menu) const {
     QAction *startAction = menu.addAction("Start");
     QAction *stopAction = menu.addAction("Stop");
     QAction *deleteAction = menu.addAction("Delete");
+    QAction *changeDelayAction = menu.addAction("Change delay");
     startAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_P));
     stopAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_S));
     deleteAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_R));
+    changeDelayAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_G));
     connect(startAction, &QAction::triggered, this, &MainWindow::startPainting);
     connect(stopAction, &QAction::triggered, this, &MainWindow::stopPainting);
     connect(deleteAction, &QAction::triggered, this, &MainWindow::deletePixels);
+    connect(changeDelayAction, &QAction::triggered, this, &MainWindow::setupDialog);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
@@ -54,6 +63,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
         startPainting();
     } else if (event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_S) {
         stopPainting();
+    } else if (event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_G) {
+        setupDialog();
     }
 }
 
@@ -86,7 +97,7 @@ void MainWindow::createTimers() {
 void MainWindow::startPainting() {
     canvas->createThreads([this](Message &message) {
         writeToQueue(message);
-    });
+    }, 1000);
     startTimers();
 }
 
@@ -108,4 +119,24 @@ void MainWindow::stopTimers() {
 void MainWindow::startTimers() {
     clearTimer->start(clearConsoleDelay);
     showMessagesTimer->start(showMsgsDelay);
+}
+
+void MainWindow::setupDialog() {
+    dialog = new QDialog();
+    lineEdit = new QLineEdit();
+    QPushButton *confirmButton = new QPushButton("Ok", dialog);
+    QPushButton *cancelButton = new QPushButton("Cancel", dialog);
+    QVBoxLayout *verticalLayout = new QVBoxLayout;
+    QHBoxLayout *horizontalLayout = new QHBoxLayout;
+    verticalLayout->addWidget(lineEdit);
+    horizontalLayout->addWidget(confirmButton);
+    horizontalLayout->addWidget(cancelButton);
+    verticalLayout->addLayout(horizontalLayout);
+    QObject::connect(confirmButton, &QPushButton::clicked, this, &MainWindow::changeDelay);
+    QObject::connect(cancelButton, &QPushButton::clicked, dialog, &QDialog::reject);
+    dialog->setFixedSize(dialogWidth, dialogHeight);
+    dialog->setLayout(verticalLayout);
+    dialog->setWindowTitle("Changing delay");
+    lineEdit->setFocus();
+    dialog->exec();
 }

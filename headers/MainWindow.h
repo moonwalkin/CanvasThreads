@@ -13,11 +13,15 @@
 #include "QTimer"
 #include "QMenu"
 #include <QKeyEvent>
+#include <QDialog>
+#include "QLineEdit"
 
 const unsigned short canvasHeight = 820;
 const unsigned short consoleHeight = 200;
 const unsigned short clearConsoleDelay = 30000;
 const unsigned short showMsgsDelay = 100;
+const unsigned short dialogWidth = 200;
+const unsigned short dialogHeight = 100;
 
 class MainWindow : public QMainWindow {
 Q_OBJECT
@@ -26,18 +30,21 @@ public:
     MainWindow(QWidget *parent = nullptr);
 private:
     CanvasWidget *canvas{};
+    QLineEdit *lineEdit;
     QLabel *canvasLabel{};
     QTextEdit *console{};
     QReadWriteLock rwLock;
     std::queue<Message> messageQueue;
     QTimer *clearTimer;
     QTimer *showMessagesTimer;
+    QDialog *dialog;
     void setupUi();
     void writeToQueue(Message &message);
     void stopTimers();
     void startTimers();
     void createTimers();
     void setupActions(QMenu &menu) const;
+    void setupDialog();
 private slots:
     void clearConsole();
     void showMessages();
@@ -46,6 +53,7 @@ private slots:
     void stopPainting();
     void keyPressEvent(QKeyEvent *event) override;
     void deletePixels();
+    void changeDelay();
 };
 
 #endif //CANVAS_THREADS_MAINWINDOW_H

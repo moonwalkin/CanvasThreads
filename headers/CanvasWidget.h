@@ -19,9 +19,10 @@ class CanvasWidget : public QWidget {
 
 public:
     CanvasWidget(QWidget *parent = nullptr) : QWidget(parent) {}
-    void createThreads(std::function<void(Message &message)> body);
+    void createThreads(std::function<void(Message &message)> body, int delay);
     void stop();
     void removePixels();
+    void changeDelay(int newDelay);
 private:
     QThread *blueThread = nullptr;
     QThread *redThread = nullptr;
@@ -30,6 +31,7 @@ private:
     std::mutex mutex;
     QMap<Coordinates, QColor> coordinates = QMap<Coordinates, QColor>();
     bool isThreadsRunning = false;
+    int delay;
     void changeColorIfCoordinatesExists(CoordinatesWithColor &coordinatesWithColor);
     QColor blendColors(QColor oldColor, QColor currentColor);
     void changeBrightness();
