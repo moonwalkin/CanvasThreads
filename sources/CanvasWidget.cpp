@@ -31,8 +31,7 @@ void CanvasWidget::doWork(QColor color, QThread &thread, std::function<void(Cons
     }
 }
 
-void CanvasWidget::createThreads(std::function<void(ConsoleMessage &message)> body, int delay) {
-    this->delay = delay;
+void CanvasWidget::createThreads(std::function<void(ConsoleMessage &message)> body) {
     if (isThreadsRunning) return;
 
     blueThread = QThread::create([this, body] {
@@ -167,10 +166,16 @@ void CanvasWidget::setThreadsName() {
     brightnessThread->setObjectName(QString("Brightness Thread"));
 }
 
-void CanvasWidget::changeDelay(int newDelay) {
+void CanvasWidget::changeDelayAndUnit(int newDelay, MeasurementUnit measurementUnit) {
     delay = newDelay;
+    this->measurementUnit = measurementUnit;
 }
 
-void CanvasWidget::setMeasurementUnit(MeasurementUnit measurementUnit) {
-    this->measurementUnit = measurementUnit;
+CanvasWidget::~CanvasWidget() {
+    stop();
+
+    delete blueThread;
+    delete redThread;
+    delete greenThread;
+    delete brightnessThread;
 }

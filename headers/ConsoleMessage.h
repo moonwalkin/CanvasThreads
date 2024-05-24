@@ -20,6 +20,7 @@ public:
                    QDateTime &time);
 
     QString toString() const;
+
 private:
     std::string mapTimeToString() const;
 };

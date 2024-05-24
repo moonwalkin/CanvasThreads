@@ -9,8 +9,20 @@ MainWindow::MainWindow(QWidget *parent)
     startPainting();
 }
 
+MainWindow::~MainWindow() {
+    stopTimers();
+    delete clearTimer;
+    delete showMessagesTimer;
+    delete setMillisButton;
+    delete setMicrosButton;
+    delete canvas;
+    delete dialog;
+    delete canvasLabel;
+    delete console;
+}
+
 void MainWindow::setupUi() {
-    QWidget *centralWidget = new QWidget();
+    QWidget *centralWidget = new QWidget(this);
     QVBoxLayout *layout = new QVBoxLayout(centralWidget);
     canvas = new CanvasWidget();
     canvasLabel = new QLabel();
@@ -31,17 +43,36 @@ void MainWindow::setupUi() {
     setCentralWidget(centralWidget);
 }
 
-void MainWindow::showContextMenu(const QPoint &pos) {
-    QMenu menu;
-    setupActions(menu);
-    menu.exec(mapToGlobal(pos));
-}
-
-void MainWindow::changeDelay() {
-    canvas->changeDelay(lineEdit->text().toInt());
-    if (setMicrosButton->isChecked()) canvas->setMeasurementUnit(Micros);
-    if (setMillisButton->isChecked()) canvas->setMeasurementUnit(Millis);
-    dialog->close();
+void MainWindow::setupDialog() {
+    dialog = new QDialog(this);
+    lineEdit = new QLineEdit(this);
+    QPushButton *confirmButton = new QPushButton("Ok", dialog);
+    QPushButton *cancelButton = new QPushButton("Cancel", dialog);
+    QVBoxLayout *verticalLayout = new QVBoxLayout();
+    QHBoxLayout *horizontalLayout = new QHBoxLayout();
+    QHBoxLayout *horizontalRadioLayout = new QHBoxLayout();
+    setMillisButton = new QRadioButton();
+    setMicrosButton = new QRadioButton();
+    setMillisButton->setText(QString("Set millis"));
+    setMicrosButton->setText(QString("Set micros"));
+    QIntValidator *validator = new QIntValidator(dialog);
+    validator->setBottom(1);
+    lineEdit->setValidator(validator);
+    verticalLayout->addWidget(lineEdit);
+    horizontalRadioLayout->setAlignment(Qt::AlignCenter);
+    horizontalRadioLayout->addWidget(setMillisButton);
+    horizontalRadioLayout->addWidget(setMicrosButton);
+    verticalLayout->addLayout(horizontalRadioLayout);
+    horizontalLayout->addWidget(confirmButton);
+    horizontalLayout->addWidget(cancelButton);
+    verticalLayout->addLayout(horizontalLayout);
+    dialog->setFixedSize(dialogWidth, dialogHeight);
+    dialog->setLayout(verticalLayout);
+    dialog->setWindowTitle("Changing delay");
+    lineEdit->setFocus();
+    QObject::connect(confirmButton, &QPushButton::clicked, this, &MainWindow::changeDelay);
+    QObject::connect(cancelButton, &QPushButton::clicked, dialog, &QDialog::reject);
+    dialog->exec();
 }
 
 void MainWindow::setupActions(QMenu &menu) const {
@@ -70,6 +101,20 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
         setupDialog();
     }
 }
+
+void MainWindow::showContextMenu(const QPoint &pos) {
+    QMenu menu;
+    setupActions(menu);
+    menu.exec(mapToGlobal(pos));
+}
+
+void MainWindow::changeDelay() {
+    int delay = lineEdit->text().toInt();
+    if (setMicrosButton->isChecked()) canvas->changeDelayAndUnit(delay, Micros);
+    if (setMillisButton->isChecked()) canvas->changeDelayAndUnit(delay, Millis);
+    dialog->close();
+}
+
 
 void MainWindow::writeToQueue(ConsoleMessage &message) {
     rwLock.lockForWrite();
@@ -100,7 +145,7 @@ void MainWindow::createTimers() {
 void MainWindow::startPainting() {
     canvas->createThreads([this](ConsoleMessage &message) {
         writeToQueue(message);
-    }, 1000);
+    });
     startTimers();
 }
 
@@ -122,36 +167,4 @@ void MainWindow::stopTimers() {
 void MainWindow::startTimers() {
     clearTimer->start(clearConsoleDelay);
     showMessagesTimer->start(showMsgsDelay);
-}
-
-void MainWindow::setupDialog() {
-    dialog = new QDialog();
-    lineEdit = new QLineEdit();
-    QPushButton *confirmButton = new QPushButton("Ok", dialog);
-    QPushButton *cancelButton = new QPushButton("Cancel", dialog);
-    setMillisButton = new QRadioButton();
-    setMicrosButton = new QRadioButton();
-    QVBoxLayout *verticalLayout = new QVBoxLayout(dialog);
-    QHBoxLayout *horizontalLayout = new QHBoxLayout(dialog);
-    QHBoxLayout *horizontalRadioLayout = new QHBoxLayout(dialog);
-    setMillisButton->setText(QString("Set millis"));
-    setMicrosButton->setText(QString("Set micros"));
-    QIntValidator *validator = new QIntValidator(dialog);
-    validator->setBottom(1);
-    lineEdit->setValidator(validator);
-    verticalLayout->addWidget(lineEdit);
-    horizontalRadioLayout->setAlignment(Qt::AlignCenter);
-    horizontalRadioLayout->addWidget(setMillisButton);
-    horizontalRadioLayout->addWidget(setMicrosButton);
-    verticalLayout->addLayout(horizontalRadioLayout);
-    horizontalLayout->addWidget(confirmButton);
-    horizontalLayout->addWidget(cancelButton);
-    verticalLayout->addLayout(horizontalLayout);
-    QObject::connect(confirmButton, &QPushButton::clicked, this, &MainWindow::changeDelay);
-    QObject::connect(cancelButton, &QPushButton::clicked, dialog, &QDialog::reject);
-    dialog->setFixedSize(dialogWidth, dialogHeight);
-    dialog->setLayout(verticalLayout);
-    dialog->setWindowTitle("Changing delay");
-    lineEdit->setFocus();
-    dialog->exec();
 }

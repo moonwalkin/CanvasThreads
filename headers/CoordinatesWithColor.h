@@ -12,11 +12,14 @@ private:
     Coordinates coordinates;
 public:
     CoordinatesWithColor(Coordinates coordinates, QColor color);
+
     QColor getColor();
+
     Coordinates getCoordinates();
-    void setColor(QColor newColor);
-    bool operator==(const Coordinates& other) const;
-    bool operator!=(const CoordinatesWithColor& other) const;
+
+    bool operator==(const Coordinates &other) const;
+
+    bool operator!=(const CoordinatesWithColor &other) const;
 };
 
 

@@ -12,8 +12,8 @@
 
 
 const unsigned int percent = 1;
-
 const unsigned short pointWidth = 15;
+const unsigned short defaultDelay = 1000;
 
 enum MeasurementUnit {
     Millis,
@@ -24,29 +24,44 @@ class CanvasWidget : public QWidget {
 
 public:
     CanvasWidget(QWidget *parent = nullptr) : QWidget(parent) {}
-    void createThreads(std::function<void(ConsoleMessage &message)> body, int delay);
+
+    ~CanvasWidget();
+
+    void createThreads(std::function<void(ConsoleMessage &message)> body);
+
     void stop();
+
     void removePixels();
-    void changeDelay(int newDelay);
-    void setMeasurementUnit(MeasurementUnit measurementUnit);
+
+    void changeDelayAndUnit(int newDelay, MeasurementUnit measurementUnit);
+
 private:
     QThread *blueThread = nullptr;
     QThread *redThread = nullptr;
     QThread *greenThread = nullptr;
     QThread *brightnessThread = nullptr;
+    bool isThreadsRunning = false;
+    int delay = defaultDelay;
+    MeasurementUnit measurementUnit = Millis;
     std::mutex mutex;
     QMap<Coordinates, QColor> coordinates = QMap<Coordinates, QColor>();
-    bool isThreadsRunning = false;
-    int delay;
+
     void changeColorIfCoordinatesExists(CoordinatesWithColor &coordinatesWithColor);
-    QColor blendColors(QColor oldColor, QColor currentColor);
+
     void changeBrightness();
-    QColor createRandomColor(QColor oldColor, QColor currentColor);
+
     void doWork(QColor color, QThread &thread, std::function<void(ConsoleMessage &message)> body);
+
     void setThreadsName();
+
     void startThreads();
-    MeasurementUnit measurementUnit = Millis;
+
+    QColor blendColors(QColor oldColor, QColor currentColor);
+
+    QColor createRandomColor(QColor oldColor, QColor currentColor);
+
 public slots:
+
     void paintPixel(CoordinatesWithColor *coordinatesWithColor);
 
 protected:

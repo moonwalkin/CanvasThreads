@@ -9,7 +9,7 @@ Coordinates::Coordinates(unsigned short x, unsigned short y) : QPoint(x, y) {
 
 Coordinates::Coordinates() {}
 
-Coordinates::Coordinates(const Coordinates &other) :  QPoint(other) {
+Coordinates::Coordinates(const Coordinates &other) : QPoint(other) {
     x = other.x;
     y = other.y;
 }
@@ -18,7 +18,6 @@ Coordinates Coordinates::generate(unsigned short canvasWidth, unsigned short can
     QRandomGenerator *random = QRandomGenerator::global();
     unsigned short randomX = random->bounded(margin, canvasWidth - margin);
     unsigned short randomY = random->bounded(margin, canvasHeight - margin);
-    qDebug() << "X:" << randomX << " Y: " << randomY;
     return Coordinates(randomX, randomY);
 }
 

@@ -1,4 +1,5 @@
 #include "../headers/ConsoleMessage.h"
+
 ConsoleMessage::ConsoleMessage(std::string threadName, Coordinates &coordinates, QColor pixelColor,
                                QDateTime &time) {
     this->threadName = threadName;
@@ -31,4 +32,3 @@ std::string ConsoleMessage::mapTimeToString() const {
 
     return hourStr + ":" + minuteStr + ":" + secondStr;
 }
-

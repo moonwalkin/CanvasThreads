@@ -29,33 +29,52 @@ Q_OBJECT
 
 public:
     MainWindow(QWidget *parent = nullptr);
+
+    ~MainWindow();
+
 private:
     CanvasWidget *canvas{};
-    QLineEdit *lineEdit;
+    QLineEdit *lineEdit{};
     QLabel *canvasLabel{};
     QTextEdit *console{};
-    QReadWriteLock rwLock;
-    std::queue<ConsoleMessage> messageQueue;
-    QTimer *clearTimer;
-    QTimer *showMessagesTimer;
-    QDialog *dialog;
-    QRadioButton *setMillisButton;
-    QRadioButton *setMicrosButton;
+    QReadWriteLock rwLock{};
+    std::queue<ConsoleMessage> messageQueue{};
+    QTimer *clearTimer{};
+    QTimer *showMessagesTimer{};
+    QDialog *dialog{};
+    QRadioButton *setMillisButton{};
+    QRadioButton *setMicrosButton{};
+
     void setupUi();
+
     void writeToQueue(ConsoleMessage &message);
+
     void stopTimers();
+
     void startTimers();
+
     void createTimers();
+
     void setupActions(QMenu &menu) const;
+
     void setupDialog();
+
 private slots:
+
     void clearConsole();
+
     void showMessages();
+
     void showContextMenu(const QPoint &pos);
+
     void startPainting();
+
     void stopPainting();
+
     void keyPressEvent(QKeyEvent *event) override;
+
     void deletePixels();
+
     void changeDelay();
 };
 

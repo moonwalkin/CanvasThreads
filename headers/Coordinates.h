@@ -11,17 +11,28 @@ class Coordinates : public QPoint {
 private:
     unsigned short x;
     unsigned short y;
+
     bool isCloseEnough(int a, int b) const;
+
     Coordinates(unsigned short x, unsigned short y);
+
 public:
     Coordinates();
-    Coordinates(const Coordinates& other);
+
+    Coordinates(const Coordinates &other);
+
     unsigned short getX() const;
+
     unsigned short getY() const;
+
     static Coordinates generate(unsigned short canvasWidth, unsigned short canvasHeight);
-    bool operator==(const Coordinates& other) const;
-    bool operator!=(const Coordinates& other) const;
+
+    bool operator==(const Coordinates &other) const;
+
+    bool operator!=(const Coordinates &other) const;
+
     bool operator<(const Coordinates &other) const;
+
     bool operator>(const Coordinates &other) const;
 };
 
