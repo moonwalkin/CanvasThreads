@@ -1,4 +1,4 @@
-#include "MyPoint.h"
+#include "../headers/MyPoint.h"
 
 
 bool MyPoint::operator==(const MyPoint &other) const {

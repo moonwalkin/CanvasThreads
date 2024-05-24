@@ -1,4 +1,4 @@
-#include "Message.h"
+#include "../headers/Message.h"
 Message::Message(std::string threadName, Coordinates &coordinates, QColor pixelColor,
                  QDateTime &time) {
     this->threadName = threadName;

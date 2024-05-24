@@ -1,4 +1,4 @@
-#include "CoordinatesWithColor.h"
+#include "../headers/CoordinatesWithColor.h"
 
 CoordinatesWithColor::CoordinatesWithColor(Coordinates coordinates, QColor color) {
     this->coordinates = coordinates;

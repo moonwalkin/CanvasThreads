@@ -6,14 +6,13 @@
 #include <QTextEdit>
 #include <QLabel>
 #include <QPainter>
-#include <QPushButton>
 #include <queue>
 #include "Message.h"
 #include "CanvasWidget.h"
 #include "QReadWriteLock"
-#include "CanvasSize.h"
 #include "QTimer"
-#include <QThread>
+#include "QMenu"
+#include <QKeyEvent>
 
 const unsigned short canvasHeight = 820;
 const unsigned short consoleHeight = 200;
@@ -29,16 +28,24 @@ private:
     CanvasWidget *canvas{};
     QLabel *canvasLabel{};
     QTextEdit *console{};
-    void setupConnections();
-    void setupUi();
-    void createPixelTreads(CanvasSize canvasSize);
-    std::queue<Message> messageQueue;
     QReadWriteLock rwLock;
+    std::queue<Message> messageQueue;
+    QTimer *clearTimer;
+    QTimer *showMessagesTimer;
+    void setupUi();
     void writeToQueue(Message &message);
-    void createTimer(const char* slot, int delay);
+    void stopTimers();
+    void startTimers();
+    void createTimers();
+    void setupActions(QMenu &menu) const;
 private slots:
     void clearConsole();
     void showMessages();
+    void showContextMenu(const QPoint &pos);
+    void startPainting();
+    void stopPainting();
+    void keyPressEvent(QKeyEvent *event) override;
+    void deletePixels();
 };
 
 #endif //CANVAS_THREADS_MAINWINDOW_H

@@ -1,4 +1,4 @@
-#include "CanvasWidget.h"
+#include "../headers/CanvasWidget.h"
 
 void CanvasWidget::paintEvent(QPaintEvent *event) {
     if (coordinates.empty()) return;
@@ -16,55 +16,40 @@ void CanvasWidget::paintEvent(QPaintEvent *event) {
     }
 }
 
-void CanvasWidget::something(QColor color) {
-    Coordinates coord = Coordinates::generate(width(), height());
-    paintPixel(new CoordinatesWithColor(coord, color));
-    QDateTime currentTime = QDateTime::currentDateTime();
-    Message message = Message(redThread->objectName().toStdString(), coord, color, currentTime);
-    QThread::usleep(1000);
+void CanvasWidget::doWork(QColor color, QThread &thread, std::function<void(Message &message)> body) {
+    while (true) {
+        if (thread.isInterruptionRequested()) return;
+        Coordinates coord = Coordinates::generate(width(), height());
+        paintPixel(new CoordinatesWithColor(coord, color));
+        QDateTime currentTime = QDateTime::currentDateTime();
+        Message message = Message(thread.objectName().toStdString(), coord, color, currentTime);
+        body(message);
+        QThread::msleep(1000);
+    }
 }
 
-void CanvasWidget::doWork(std::function<void(Message &message)> body) {
+void CanvasWidget::createThreads(std::function<void(Message &message)> body) {
     blueThread = QThread::create([this, body] {
-        while (true) {
-            if (blueThread->isInterruptionRequested()) return;
-            Coordinates coordinates = Coordinates::generate(width(), height());
-            paintPixel(new CoordinatesWithColor(coordinates, Qt::blue));
-            QDateTime currentTime = QDateTime::currentDateTime();
-            Message message = Message(blueThread->objectName().toStdString(), coordinates, Qt::blue, currentTime);
-            QThread::usleep(1000);
+        doWork(Qt::blue, *blueThread, [body](Message &message) {
             body(message);
-        }
+        });
     });
-
     redThread = QThread::create([this, body] {
-        while (true) {
-            if (redThread->isInterruptionRequested()) return;
-            Coordinates coordinates = Coordinates::generate(width(), height());
-            paintPixel(new CoordinatesWithColor(coordinates, Qt::red));
-            QDateTime currentTime = QDateTime::currentDateTime();
-            Message message = Message(redThread->objectName().toStdString(), coordinates, Qt::red, currentTime);
-            QThread::usleep(1000);
+        doWork(Qt::red, *redThread, [body](Message &message) {
             body(message);
-        }
+        });
     });
-
-
     greenThread = QThread::create([this, body] {
-        while (true) {
-            if (greenThread->isInterruptionRequested()) return;
-            Coordinates coordinates = Coordinates::generate(width(), height());
-            paintPixel(new CoordinatesWithColor(coordinates, Qt::green));
-            QDateTime currentTime = QDateTime::currentDateTime();
-            Message message = Message(greenThread->objectName().toStdString(), coordinates, Qt::green, currentTime);
-            QThread::usleep(1000);
+        doWork(Qt::green, *greenThread, [body](Message &message) {
             body(message);
-        }
+        });
     });
 
-    blueThread->setObjectName(QString("Blue Thread"));
-    greenThread->setObjectName(QString("Green Thread"));
-    redThread->setObjectName(QString("Red Thread"));
+    setThreadsName();
+    startThreads();
+}
+
+void CanvasWidget::startThreads() {
     blueThread->start();
     greenThread->start();
     redThread->start();
@@ -155,4 +140,8 @@ void CanvasWidget::removePixels() {
     update();
 }
 
-
+void CanvasWidget::setThreadsName() {
+    blueThread->setObjectName(QString("Blue Thread"));
+    greenThread->setObjectName(QString("Green Thread"));
+    redThread->setObjectName(QString("Red Thread"));
+}

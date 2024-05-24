@@ -1,6 +1,6 @@
 #include <QDebug>
 #include <QRandomGenerator>
-#include "Coordinates.h"
+#include "../headers/Coordinates.h"
 
 Coordinates::Coordinates(unsigned short x, unsigned short y) {
     this->x = x;

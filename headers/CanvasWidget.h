@@ -20,13 +20,13 @@ class CanvasWidget : public QWidget {
 
 public:
     CanvasWidget(QWidget *parent = nullptr) : QWidget(parent) {}
-    void doWork(std::function<void(Message &message)> body);
+    void createThreads(std::function<void(Message &message)> body);
     void stop();
     void removePixels();
 private:
-    QThread *blueThread;
-    QThread *redThread;
-    QThread *greenThread;
+    QThread *blueThread = nullptr;
+    QThread *redThread = nullptr;
+    QThread *greenThread = nullptr;
     std::mutex mutex;
     QMap<MyPoint, QColor> coordinates = QMap<MyPoint, QColor>();
 
@@ -34,7 +34,9 @@ private:
     QColor blendColors(QColor oldColor, QColor currentColor);
     void changeBrightness();
     QColor createRandomColor(QColor oldColor, QColor currentColor);
-    void something(QColor color);
+    void doWork(QColor color, QThread &thread, std::function<void(Message &message)> body);
+    void setThreadsName();
+    void startThreads();
 public slots:
     void paintPixel(CoordinatesWithColor *coordinatesWithColor);
 
