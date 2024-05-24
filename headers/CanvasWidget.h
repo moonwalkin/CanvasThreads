@@ -29,7 +29,7 @@ private:
     QThread *brightnessThread = nullptr;
     std::mutex mutex;
     QMap<Coordinates, QColor> coordinates = QMap<Coordinates, QColor>();
-
+    bool isThreadsRunning = false;
     void changeColorIfCoordinatesExists(CoordinatesWithColor &coordinatesWithColor);
     QColor blendColors(QColor oldColor, QColor currentColor);
     void changeBrightness();

@@ -29,6 +29,8 @@ void CanvasWidget::doWork(QColor color, QThread &thread, std::function<void(Mess
 }
 
 void CanvasWidget::createThreads(std::function<void(Message &message)> body) {
+    if (isThreadsRunning) return;
+
     blueThread = QThread::create([this, body] {
         doWork(Qt::blue, *blueThread, [body](Message &message) {
             body(message);
@@ -62,6 +64,7 @@ void CanvasWidget::startThreads() {
     greenThread->start();
     redThread->start();
     brightnessThread->start();
+    isThreadsRunning = true;
 }
 
 void CanvasWidget::paintPixel(CoordinatesWithColor *coordinatesWithColor) {
@@ -78,7 +81,7 @@ void CanvasWidget::paintPixel(CoordinatesWithColor *coordinatesWithColor) {
 
 void CanvasWidget::changeColorIfCoordinatesExists(CoordinatesWithColor &coordinatesWithColor) {
     const QColor &currentColor = coordinatesWithColor.getColor();
-    const Coordinates currentCoordinates =coordinatesWithColor.getCoordinates();
+    const Coordinates currentCoordinates = coordinatesWithColor.getCoordinates();
     if (coordinates.contains(currentCoordinates)) {
         QColor oldColor = coordinates.value(currentCoordinates);
         QColor newColor = blendColors(oldColor, currentColor);
@@ -142,6 +145,7 @@ void CanvasWidget::stop() {
     greenThread->quit();
     blueThread->quit();
     brightnessThread->quit();
+    isThreadsRunning = false;
 }
 
 void CanvasWidget::removePixels() {
