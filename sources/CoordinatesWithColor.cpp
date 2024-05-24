@@ -1,4 +1,4 @@
-#include "CoordinatesWithColor.h"
+#include "../headers/CoordinatesWithColor.h"
 
 CoordinatesWithColor::CoordinatesWithColor(Coordinates coordinates, QColor color) {
     this->coordinates = coordinates;
@@ -19,8 +19,4 @@ bool CoordinatesWithColor::operator==(const Coordinates &other) const {
 
 bool CoordinatesWithColor::operator!=(const CoordinatesWithColor &other) const {
     return !(*this == other.coordinates);
-}
-
-void CoordinatesWithColor::setColor(QColor newColor) {
-    color = newColor;
 }
