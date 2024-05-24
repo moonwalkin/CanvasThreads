@@ -45,6 +45,14 @@ void CanvasWidget::createThreads(std::function<void(Message &message)> body) {
         });
     });
 
+    brightnessThread = QThread::create([this, body] {
+        while (true) {
+            if (brightnessThread->isInterruptionRequested()) return;
+            paintPixel(nullptr);
+            QThread::msleep(1000);
+        }
+    });
+
     setThreadsName();
     startThreads();
 }
@@ -53,6 +61,7 @@ void CanvasWidget::startThreads() {
     blueThread->start();
     greenThread->start();
     redThread->start();
+    brightnessThread->start();
 }
 
 void CanvasWidget::paintPixel(CoordinatesWithColor *coordinatesWithColor) {
@@ -68,8 +77,6 @@ void CanvasWidget::paintPixel(CoordinatesWithColor *coordinatesWithColor) {
 }
 
 void CanvasWidget::changeColorIfCoordinatesExists(CoordinatesWithColor &coordinatesWithColor) {
-    int x = coordinatesWithColor.getCoordinates().getX();
-    int y = coordinatesWithColor.getCoordinates().getY();
     const QColor &currentColor = coordinatesWithColor.getColor();
     const Coordinates currentCoordinates =coordinatesWithColor.getCoordinates();
     if (coordinates.contains(currentCoordinates)) {
@@ -130,9 +137,11 @@ void CanvasWidget::stop() {
     redThread->requestInterruption();
     greenThread->requestInterruption();
     blueThread->requestInterruption();
+    brightnessThread->requestInterruption();
     redThread->quit();
     greenThread->quit();
     blueThread->quit();
+    brightnessThread->quit();
 }
 
 void CanvasWidget::removePixels() {
@@ -144,4 +153,5 @@ void CanvasWidget::setThreadsName() {
     blueThread->setObjectName(QString("Blue Thread"));
     greenThread->setObjectName(QString("Green Thread"));
     redThread->setObjectName(QString("Red Thread"));
+    brightnessThread->setObjectName(QString("Brightness Thread"));
 }

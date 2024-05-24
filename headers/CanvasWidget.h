@@ -26,6 +26,7 @@ private:
     QThread *blueThread = nullptr;
     QThread *redThread = nullptr;
     QThread *greenThread = nullptr;
+    QThread *brightnessThread = nullptr;
     std::mutex mutex;
     QMap<Coordinates, QColor> coordinates = QMap<Coordinates, QColor>();
 
