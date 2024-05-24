@@ -7,7 +7,7 @@
 #include <QPainter>
 #include <QRandomGenerator>
 #include <qdatetime.h>
-#include "Message.h"
+#include "ConsoleMessage.h"
 #include "QThread"
 
 
@@ -15,14 +15,20 @@ const unsigned int percent = 1;
 
 const unsigned short pointWidth = 15;
 
+enum MeasurementUnit {
+    Millis,
+    Micros
+};
+
 class CanvasWidget : public QWidget {
 
 public:
     CanvasWidget(QWidget *parent = nullptr) : QWidget(parent) {}
-    void createThreads(std::function<void(Message &message)> body, int delay);
+    void createThreads(std::function<void(ConsoleMessage &message)> body, int delay);
     void stop();
     void removePixels();
     void changeDelay(int newDelay);
+    void setMeasurementUnit(MeasurementUnit measurementUnit);
 private:
     QThread *blueThread = nullptr;
     QThread *redThread = nullptr;
@@ -36,9 +42,10 @@ private:
     QColor blendColors(QColor oldColor, QColor currentColor);
     void changeBrightness();
     QColor createRandomColor(QColor oldColor, QColor currentColor);
-    void doWork(QColor color, QThread &thread, std::function<void(Message &message)> body);
+    void doWork(QColor color, QThread &thread, std::function<void(ConsoleMessage &message)> body);
     void setThreadsName();
     void startThreads();
+    MeasurementUnit measurementUnit = Millis;
 public slots:
     void paintPixel(CoordinatesWithColor *coordinatesWithColor);
 

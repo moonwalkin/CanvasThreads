@@ -1,13 +1,13 @@
-#include "../headers/Message.h"
-Message::Message(std::string threadName, Coordinates &coordinates, QColor pixelColor,
-                 QDateTime &time) {
+#include "../headers/ConsoleMessage.h"
+ConsoleMessage::ConsoleMessage(std::string threadName, Coordinates &coordinates, QColor pixelColor,
+                               QDateTime &time) {
     this->threadName = threadName;
     this->coordinates = coordinates;
     this->pixelColor = pixelColor;
     this->time = time;
 }
 
-QString Message::toString() const {
+QString ConsoleMessage::toString() const {
     std::string color;
     if (pixelColor == Qt::red) color = "Red";
     else if (pixelColor == Qt::blue) color = "Blue";
@@ -20,7 +20,7 @@ QString Message::toString() const {
     );
 }
 
-std::string Message::mapTimeToString() const {
+std::string ConsoleMessage::mapTimeToString() const {
     int hour = time.time().hour();
     int minute = time.time().minute();
     int second = time.time().second();

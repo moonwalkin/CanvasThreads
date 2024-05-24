@@ -1,5 +1,5 @@
-#ifndef CANVAS_THREADS_MESSAGE_H
-#define CANVAS_THREADS_MESSAGE_H
+#ifndef CANVAS_THREADS_CONSOLEMESSAGE_H
+#define CANVAS_THREADS_CONSOLEMESSAGE_H
 
 #include <chrono>
 #include "Coordinates.h"
@@ -9,15 +9,15 @@
 #include <iomanip>
 #include <qdatetime.h>
 
-class Message {
+class ConsoleMessage {
 public:
     std::string threadName;
     Coordinates coordinates;
     QColor pixelColor;
     QDateTime time;
 
-    Message(std::string threadName, Coordinates &coordinates, QColor pixelColor,
-            QDateTime &time);
+    ConsoleMessage(std::string threadName, Coordinates &coordinates, QColor pixelColor,
+                   QDateTime &time);
 
     QString toString() const;
 private:
@@ -25,4 +25,4 @@ private:
 };
 
 
-#endif //CANVAS_THREADS_MESSAGE_H
+#endif //CANVAS_THREADS_CONSOLEMESSAGE_H

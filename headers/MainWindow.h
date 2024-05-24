@@ -7,7 +7,7 @@
 #include <QLabel>
 #include <QPainter>
 #include <queue>
-#include "Message.h"
+#include "ConsoleMessage.h"
 #include "CanvasWidget.h"
 #include "QReadWriteLock"
 #include "QTimer"
@@ -15,12 +15,13 @@
 #include <QKeyEvent>
 #include <QDialog>
 #include "QLineEdit"
+#include <QRadioButton>
 
 const unsigned short canvasHeight = 820;
 const unsigned short consoleHeight = 200;
 const unsigned short clearConsoleDelay = 30000;
 const unsigned short showMsgsDelay = 100;
-const unsigned short dialogWidth = 200;
+const unsigned short dialogWidth = 300;
 const unsigned short dialogHeight = 100;
 
 class MainWindow : public QMainWindow {
@@ -34,12 +35,14 @@ private:
     QLabel *canvasLabel{};
     QTextEdit *console{};
     QReadWriteLock rwLock;
-    std::queue<Message> messageQueue;
+    std::queue<ConsoleMessage> messageQueue;
     QTimer *clearTimer;
     QTimer *showMessagesTimer;
     QDialog *dialog;
+    QRadioButton *setMillisButton;
+    QRadioButton *setMicrosButton;
     void setupUi();
-    void writeToQueue(Message &message);
+    void writeToQueue(ConsoleMessage &message);
     void stopTimers();
     void startTimers();
     void createTimers();

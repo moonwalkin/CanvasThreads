@@ -1,4 +1,5 @@
 #include <QPushButton>
+#include <QIntValidator>
 #include "../headers/MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -38,6 +39,8 @@ void MainWindow::showContextMenu(const QPoint &pos) {
 
 void MainWindow::changeDelay() {
     canvas->changeDelay(lineEdit->text().toInt());
+    if (setMicrosButton->isChecked()) canvas->setMeasurementUnit(Micros);
+    if (setMillisButton->isChecked()) canvas->setMeasurementUnit(Millis);
     dialog->close();
 }
 
@@ -68,7 +71,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
     }
 }
 
-void MainWindow::writeToQueue(Message &message) {
+void MainWindow::writeToQueue(ConsoleMessage &message) {
     rwLock.lockForWrite();
     messageQueue.push(message);
     rwLock.unlock();
@@ -76,7 +79,7 @@ void MainWindow::writeToQueue(Message &message) {
 
 void MainWindow::showMessages() {
     while (!messageQueue.empty()) {
-        Message message = messageQueue.front();
+        ConsoleMessage message = messageQueue.front();
         console->append(message.toString());
         messageQueue.pop();
     }
@@ -95,7 +98,7 @@ void MainWindow::createTimers() {
 }
 
 void MainWindow::startPainting() {
-    canvas->createThreads([this](Message &message) {
+    canvas->createThreads([this](ConsoleMessage &message) {
         writeToQueue(message);
     }, 1000);
     startTimers();
@@ -126,9 +129,21 @@ void MainWindow::setupDialog() {
     lineEdit = new QLineEdit();
     QPushButton *confirmButton = new QPushButton("Ok", dialog);
     QPushButton *cancelButton = new QPushButton("Cancel", dialog);
-    QVBoxLayout *verticalLayout = new QVBoxLayout;
-    QHBoxLayout *horizontalLayout = new QHBoxLayout;
+    setMillisButton = new QRadioButton();
+    setMicrosButton = new QRadioButton();
+    QVBoxLayout *verticalLayout = new QVBoxLayout(dialog);
+    QHBoxLayout *horizontalLayout = new QHBoxLayout(dialog);
+    QHBoxLayout *horizontalRadioLayout = new QHBoxLayout(dialog);
+    setMillisButton->setText(QString("Set millis"));
+    setMicrosButton->setText(QString("Set micros"));
+    QIntValidator *validator = new QIntValidator(dialog);
+    validator->setBottom(1);
+    lineEdit->setValidator(validator);
     verticalLayout->addWidget(lineEdit);
+    horizontalRadioLayout->setAlignment(Qt::AlignCenter);
+    horizontalRadioLayout->addWidget(setMillisButton);
+    horizontalRadioLayout->addWidget(setMicrosButton);
+    verticalLayout->addLayout(horizontalRadioLayout);
     horizontalLayout->addWidget(confirmButton);
     horizontalLayout->addWidget(cancelButton);
     verticalLayout->addLayout(horizontalLayout);

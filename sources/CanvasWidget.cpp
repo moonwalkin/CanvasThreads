@@ -16,34 +16,37 @@ void CanvasWidget::paintEvent(QPaintEvent *event) {
     }
 }
 
-void CanvasWidget::doWork(QColor color, QThread &thread, std::function<void(Message &message)> body) {
+void CanvasWidget::doWork(QColor color, QThread &thread, std::function<void(ConsoleMessage &message)> body) {
     while (true) {
         if (thread.isInterruptionRequested()) return;
         Coordinates coord = Coordinates::generate(width(), height());
         paintPixel(new CoordinatesWithColor(coord, color));
         QDateTime currentTime = QDateTime::currentDateTime();
-        Message message = Message(thread.objectName().toStdString(), coord, color, currentTime);
+        ConsoleMessage message = ConsoleMessage(thread.objectName().toStdString(), coord, color, currentTime);
         body(message);
-        QThread::msleep(delay);
+        if (measurementUnit == Millis)
+            QThread::msleep(delay);
+        else
+            QThread::usleep(delay);
     }
 }
 
-void CanvasWidget::createThreads(std::function<void(Message &message)> body, int delay) {
+void CanvasWidget::createThreads(std::function<void(ConsoleMessage &message)> body, int delay) {
     this->delay = delay;
     if (isThreadsRunning) return;
 
     blueThread = QThread::create([this, body] {
-        doWork(Qt::blue, *blueThread, [body](Message &message) {
+        doWork(Qt::blue, *blueThread, [body](ConsoleMessage &message) {
             body(message);
         });
     });
     redThread = QThread::create([this, body] {
-        doWork(Qt::red, *redThread, [body](Message &message) {
+        doWork(Qt::red, *redThread, [body](ConsoleMessage &message) {
             body(message);
         });
     });
     greenThread = QThread::create([this, body] {
-        doWork(Qt::green, *greenThread, [body](Message &message) {
+        doWork(Qt::green, *greenThread, [body](ConsoleMessage &message) {
             body(message);
         });
     });
@@ -52,7 +55,10 @@ void CanvasWidget::createThreads(std::function<void(Message &message)> body, int
         while (true) {
             if (brightnessThread->isInterruptionRequested()) return;
             paintPixel(nullptr);
-            QThread::msleep(this->delay * 10);
+            if (measurementUnit == Millis)
+                QThread::msleep(this->delay * 10);
+            else
+                QThread::usleep(this->delay * 10);
         }
     });
 
@@ -163,4 +169,8 @@ void CanvasWidget::setThreadsName() {
 
 void CanvasWidget::changeDelay(int newDelay) {
     delay = newDelay;
+}
+
+void CanvasWidget::setMeasurementUnit(MeasurementUnit measurementUnit) {
+    this->measurementUnit = measurementUnit;
 }
