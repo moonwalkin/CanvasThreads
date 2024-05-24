@@ -4,7 +4,6 @@
 #include <QWidget>
 #include <mutex>
 #include "CoordinatesWithColor.h"
-#include "MyPoint.h"
 #include <QPainter>
 #include <QRandomGenerator>
 #include <qdatetime.h>
@@ -28,7 +27,7 @@ private:
     QThread *redThread = nullptr;
     QThread *greenThread = nullptr;
     std::mutex mutex;
-    QMap<MyPoint, QColor> coordinates = QMap<MyPoint, QColor>();
+    QMap<Coordinates, QColor> coordinates = QMap<Coordinates, QColor>();
 
     void changeColorIfCoordinatesExists(CoordinatesWithColor &coordinatesWithColor);
     QColor blendColors(QColor oldColor, QColor currentColor);

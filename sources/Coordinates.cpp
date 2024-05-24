@@ -2,14 +2,14 @@
 #include <QRandomGenerator>
 #include "../headers/Coordinates.h"
 
-Coordinates::Coordinates(unsigned short x, unsigned short y) {
+Coordinates::Coordinates(unsigned short x, unsigned short y) : QPoint(x, y) {
     this->x = x;
     this->y = y;
 }
 
 Coordinates::Coordinates() {}
 
-Coordinates::Coordinates(const Coordinates &other) {
+Coordinates::Coordinates(const Coordinates &other) :  QPoint(other) {
     x = other.x;
     y = other.y;
 }
@@ -31,9 +31,27 @@ unsigned short Coordinates::getY() const {
 }
 
 bool Coordinates::operator==(const Coordinates &other) const {
-    return (abs(x - other.x) <= possibleDifference) && (abs(y - other.y) <= possibleDifference);
+    return isCloseEnough(x, other.x) && isCloseEnough(y, other.y);
 }
 
 bool Coordinates::operator!=(const Coordinates &other) const {
     return !(*this == other);
+}
+
+bool Coordinates::operator<(const Coordinates &other) const {
+    if (y == other.y) {
+        return isCloseEnough(x, other.x);
+    }
+    return y < other.y;
+}
+
+bool Coordinates::operator>(const Coordinates &other) const {
+    if (y == other.y) {
+        return isCloseEnough(x, other.x);
+    }
+    return y > other.y;
+}
+
+bool Coordinates::isCloseEnough(int a, int b) const {
+    return abs(a - b) <= possibleDifference;
 }
